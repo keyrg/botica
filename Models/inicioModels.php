@@ -70,17 +70,18 @@ class inicioModels extends mainModel {
         return $sql;
     }
 
-    protected function purchase_statistics_model() {
-        $sql = mainModel::connect()->prepare("
-            SELECT TO_CHAR(compra_fecha, 'Month') AS fecha, 
-                   SUM(compra_total) AS total 
-            FROM compra 
-            WHERE EXTRACT(YEAR FROM compra_fecha) = EXTRACT(YEAR FROM CURRENT_DATE)
-            GROUP BY EXTRACT(MONTH FROM compra_fecha), TO_CHAR(compra_fecha, 'Month') 
-            ORDER BY EXTRACT(MONTH FROM compra_fecha) DESC 
-            LIMIT 12
-        ");
-        $sql->execute();
-        return $sql;
-    }
+   protected function purchase_statistics_model() {
+    $sql = mainModel::connect()->prepare("
+        SELECT TO_CHAR(compra_fecha::date, 'Month') AS fecha, 
+               SUM(compra_total) AS total 
+        FROM compra 
+        WHERE EXTRACT(YEAR FROM compra_fecha::date) = EXTRACT(YEAR FROM CURRENT_DATE)
+        GROUP BY EXTRACT(MONTH FROM compra_fecha::date), TO_CHAR(compra_fecha::date, 'Month') 
+        ORDER BY EXTRACT(MONTH FROM compra_fecha::date) DESC 
+        LIMIT 12
+    ");
+    $sql->execute();
+    return $sql;
+}
+
 }
