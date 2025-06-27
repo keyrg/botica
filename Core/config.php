@@ -14,6 +14,3 @@ define('SECRET_KEY', '$#*ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijmnopqrstuvwxyz12345
 define('SECRET_IV', '20001109108103975194753');
 
 
-// Agrega al final de config.php
-define('BASE_URL', 'https://botica-532h.onrender.com/');
-define('MEDIA_URL', BASE_URL.'assets/');
