@@ -14,10 +14,11 @@
     
     //Formato de moneda
     function formatMoney($quanty)
-    {
-        $quanty = number_format($quanty,2,SPD,SPM);
-        return $quanty;
-    } 
+{
+    $quanty = (float)($quanty ?? 0); // Se asegura de que no sea NULL
+    return number_format($quanty, 2, SPD, SPM);
+}
+
 
     //Desencriptar
     function decryption($string)

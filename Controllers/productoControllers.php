@@ -182,73 +182,72 @@
             }
             return mainModel::sweet_alert($alert);
         }
-        public function list_prod_controller(){
-            session_start(['name'=>'STR']);
-            $query = productoModels::list_prod_model();
-            $data=Array();
-            while ($reg=$query->fetch()) {
- 
-                $query2 = productoModels::get_stock_model($reg['prod_id']);
+       public function list_prod_controller(){
+    session_start(['name'=>'STR']);
+    $query = productoModels::list_prod_model();
+    $data=Array();
+    while ($reg=$query->fetch()) {
 
-                while ($obj=$query2->fetch()) {
-                    $stock = $obj['lote_stock'];
-                    if(empty($obj['lote_stock'])){
-                        $stock = '0';
-                    }else{
-                        $stock = $obj['lote_stock'];
-                    }
-                    if($obj['lote_stock'] >= 15):
-                        $status = '<span class="badge badge-success">Abastecido</span>';
-                    elseif($obj['lote_stock'] > 0):
-                        $status = '<span class="badge badge-warning">Abastecer</span>';
-                    else:
-                        $status = '<span class="badge badge-danger">Agotado</span>';
-                    endif; 
-                }
-                $data[]=array(
-                    "0"=>($stock > 0)? '<div class="btn-group">
-                    <button type="button" class="btn btn-info btn-sm editarImagen" title="Actualizar imagen" data-toggle="modal" 
-                    id="'.mainModel::encryption($reg['prod_id']).'">
-                    <i class="fa fa-image fa-xs"></i>
-                    </button>'.' '.' 
-                    <button type="button" class="btn btn-success btn-sm addLote" title="Aregar lote existente" data-toggle="modal" id="'.mainModel::encryption($reg['prod_id']).'">
-                    <i class="fa fa-plus-square fa-xs"></i>
-                    </button>'.' '.' 
-                    <button type="button"   title="Actualizar" class="btn btn-primary btn-sm edit" id="'.mainModel::encryption($reg['prod_id']).'">
-                    <i class="fa fa-edit fa-xs"></i>
-                    </button></div>':
-                    '<div class="btn-group">
-                    <button type="button" class="btn btn-info btn-sm editarImagen" title="Actualizar imagen" data-toggle="modal" 
-                    id="'.mainModel::encryption($reg['prod_id']).'">
-                    <i class="fa fa-image fa-xs"></i>
-                    </button>'.' '.' 
-                    <button type="button" class="btn btn-success btn-sm addLote" data-toggle="modal" id="'.mainModel::encryption($reg['prod_id']).'">
-                    <i class="fa fa-plus-square fa-xs"></i>
-                    </button>'.' '.' 
-                    <button type="button"   title="Actualizar" class="btn btn-primary btn-sm edit" id="'.mainModel::encryption($reg['prod_id']).'">
-                    <i class="fa fa-edit fa-xs"></i>
-                    </button>'.' '.' 
-                    <button type="button"   title="Eliminar" class="btn btn-danger btn-sm delete" id="'.mainModel::encryption($reg['prod_id']).'">
-                    <i class="fa fa-trash fa-xs"></i>
-                    </button></div>',
-                    "1"=>$reg['prod_nombre'],
-                    "2"=>$reg['prod_concentracion'],
-                    "3"=>$reg['prod_adicional'],
-                    "4"=>'UND.'.$stock,
-                    "5"=>$_SESSION['simbolo_str'].formatMoney($reg['prod_precioV']),
-                    "6"=>$reg['lab_nombre'], 
-                    "7"=>$reg['tipo_nombre'],
-                    "8"=>$reg['present_nombre'],
-                    "9"=>$status
-                );
-            }
-            $results=array(
-                     "sEcho"=>1,
-                     "iTotalRecords"=>count($data),
-                     "iTotalDisplayRecords"=>count($data),
-                     "aaData"=>$data);
-            echo json_encode($results);
-        }  
+        $query2 = productoModels::get_stock_model($reg['prod_id']);
+
+        $stock = 0; // Valor por defecto
+        $status = '<span class="badge badge-danger">Agotado</span>'; // Estado por defecto
+
+        while ($obj=$query2->fetch()) {
+            $stock = !empty($obj['lote_stock']) ? $obj['lote_stock'] : 0;
+
+            if($stock >= 15):
+                $status = '<span class="badge badge-success">Abastecido</span>';
+            elseif($stock > 0):
+                $status = '<span class="badge badge-warning">Abastecer</span>';
+            endif;
+        }
+
+        $data[]=array(
+            "0"=>($stock > 0)? '<div class="btn-group">
+            <button type="button" class="btn btn-info btn-sm editarImagen" title="Actualizar imagen" data-toggle="modal" 
+            id="'.mainModel::encryption($reg['prod_id']).'">
+            <i class="fa fa-image fa-xs"></i>
+            </button>'.' '.' 
+            <button type="button" class="btn btn-success btn-sm addLote" title="Aregar lote existente" data-toggle="modal" id="'.mainModel::encryption($reg['prod_id']).'">
+            <i class="fa fa-plus-square fa-xs"></i>
+            </button>'.' '.' 
+            <button type="button"   title="Actualizar" class="btn btn-primary btn-sm edit" id="'.mainModel::encryption($reg['prod_id']).'">
+            <i class="fa fa-edit fa-xs"></i>
+            </button></div>':
+            '<div class="btn-group">
+            <button type="button" class="btn btn-info btn-sm editarImagen" title="Actualizar imagen" data-toggle="modal" 
+            id="'.mainModel::encryption($reg['prod_id']).'">
+            <i class="fa fa-image fa-xs"></i>
+            </button>'.' '.' 
+            <button type="button" class="btn btn-success btn-sm addLote" data-toggle="modal" id="'.mainModel::encryption($reg['prod_id']).'">
+            <i class="fa fa-plus-square fa-xs"></i>
+            </button>'.' '.' 
+            <button type="button"   title="Actualizar" class="btn btn-primary btn-sm edit" id="'.mainModel::encryption($reg['prod_id']).'">
+            <i class="fa fa-edit fa-xs"></i>
+            </button>'.' '.' 
+            <button type="button"   title="Eliminar" class="btn btn-danger btn-sm delete" id="'.mainModel::encryption($reg['prod_id']).'">
+            <i class="fa fa-trash fa-xs"></i>
+            </button></div>',
+            "1"=>$reg['prod_nombre'],
+            "2"=>$reg['prod_concentracion'],
+            "3"=>$reg['prod_adicional'],
+            "4"=>'UND.'.$stock,
+            "5"=>$_SESSION['simbolo_str'].formatMoney(isset($reg['prod_precioV']) ? $reg['prod_precioV'] : 0),
+            "6"=>$reg['lab_nombre'], 
+            "7"=>$reg['tipo_nombre'],
+            "8"=>$reg['present_nombre'],
+            "9"=>$status
+        );
+    }
+    $results=array(
+             "sEcho"=>1,
+             "iTotalRecords"=>count($data),
+             "iTotalDisplayRecords"=>count($data),
+             "aaData"=>$data);
+    echo json_encode($results);
+}
+
         public function list_catalog_controller(){
             session_start(['name'=>'STR']);
             $query = productoModels::list_catalog_model();
