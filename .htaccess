@@ -1,3 +1,8 @@
 Options All -Indexes
 RewriteEngine On
 RewriteRule ^([_a-zA-Z0-9/]+)$ index.php?views=$1
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+</IfModule>
