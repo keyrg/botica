@@ -1,7 +1,6 @@
-# Imagen base con PHP y Apache
 FROM php:8.2-apache
 
-# Habilita mod_rewrite y otras extensiones necesarias
+# Instala dependencias
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
@@ -10,26 +9,23 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpng-dev \
     libonig-dev \
-    libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql zip \
-    && a2enmod rewrite \
-    && service apache2 restart
+    libxml2-dev && \
+    docker-php-ext-install pdo pdo_mysql zip && \
+    a2enmod rewrite
+
+# Habilita .htaccess en Apache
+RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Instala Node.js y npm
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs
+# Instala Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && apt-get install -y nodejs
 
-# Copia el código del proyecto al contenedor
+# Copia el código del proyecto
 COPY . /var/www/html/
 
-# Establece permisos adecuados
+# Permisos
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-# Establece el DocumentRoot si usas alguna subcarpeta (opcional)
-# RUN sed -i 's|/var/www/html|/var/www/html/public|' /etc/apache2/sites-available/000-default.conf
-
-# Expone el puerto 80 para Apache
 EXPOSE 80
