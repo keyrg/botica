@@ -155,8 +155,12 @@
             $usuario = reporteVentasModels::show_users_model();
             $usuarios = $usuario->fetchAll();
 
+        
+
             $arrayVendedores = array();
-            $arraylistaVendedores = array();
+$arraylistaVendedores = array();
+$sumaTotalVendedores = array(); // <-- ESTA LÍNEA ES LA CLAVE
+
 
             foreach ($ventas as $key => $valueVentas) { 
 
