@@ -1,582 +1,302 @@
--- phpMyAdmin SQL Dump
--- version 5.0.2
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1
--- Tiempo de generación: 07-07-2020 a las 02:57:15
--- Versión del servidor: 10.4.11-MariaDB
--- Versión de PHP: 7.4.4
+-- PostgreSQL database dump
+-- Converted from MySQL to PostgreSQL
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Database: botica
 
+-- DROP DATABASE IF EXISTS botica;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+CREATE DATABASE botica
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.UTF-8'
+    LC_CTYPE = 'en_US.UTF-8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
 
---
--- Base de datos: `botica`
---
+\c botica
 
--- --------------------------------------------------------
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
 
---
--- Estructura de tabla para la tabla `bitacora`
---
+-- Table: bitacora
 
-CREATE TABLE `bitacora` (
-  `bitacora_id` int(11) NOT NULL,
-  `bitacora_codigo` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `bitacora_fecha` date NOT NULL,
-  `bitacora_horaInicio` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-  `bitacora_horaFin` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-  `bitacora_tipoUsuario` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-  `bitacora_ano` int(4) NOT NULL,
-  `bitacora_id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+CREATE TABLE bitacora (
+    bitacora_id serial PRIMARY KEY,
+    bitacora_codigo varchar(70) NOT NULL,
+    bitacora_fecha date NOT NULL,
+    bitacora_horaInicio varchar(20) NOT NULL,
+    bitacora_horaFin varchar(20) NOT NULL,
+    bitacora_tipoUsuario varchar(20) NOT NULL,
+    bitacora_ano integer NOT NULL,
+    bitacora_id_usuario integer NOT NULL
+);
 
--- --------------------------------------------------------
+-- Table: cliente
 
---
--- Estructura de tabla para la tabla `cliente`
---
+CREATE TABLE cliente (
+    cliente_id serial PRIMARY KEY,
+    cliente_nombre varchar(150) NOT NULL,
+    cliente_dni varchar(8) NOT NULL,
+    cliente_celular varchar(12) NOT NULL,
+    cliente_direccion varchar(255) NOT NULL,
+    cliente_correo varchar(70) NOT NULL
+);
 
-CREATE TABLE `cliente` (
-  `cliente_id` int(10) NOT NULL,
-  `cliente_nombre` varchar(150) COLLATE utf8_spanish2_ci NOT NULL,
-  `cliente_dni` varchar(8) COLLATE utf8_spanish2_ci NOT NULL,
-  `cliente_celular` varchar(12) COLLATE utf8_spanish2_ci NOT NULL,
-  `cliente_direccion` varchar(255) COLLATE utf8_spanish2_ci NOT NULL,
-  `cliente_correo` varchar(70) COLLATE utf8_spanish2_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+-- Table: compra
 
--- --------------------------------------------------------
+CREATE TABLE compra (
+    compra_id serial PRIMARY KEY,
+    compra_codigo varchar(70) NOT NULL,
+    compra_tipoComprobante varchar(30) NOT NULL,
+    compra_serie varchar(7) NOT NULL,
+    compra_numComprobante varchar(30) NOT NULL,
+    compra_fecha varchar(40) NOT NULL,
+    compra_impuesto integer NOT NULL,
+    compra_total numeric(10,2) NOT NULL DEFAULT 0.00,
+    compra_id_proveedor integer NOT NULL,
+    compra_id_usuario integer NOT NULL,
+    compra_estado boolean NOT NULL DEFAULT true
+);
 
---
--- Estructura de tabla para la tabla `compra`
---
+-- Table: comprobante
 
-CREATE TABLE `compra` (
-  `compra_id` int(11) NOT NULL,
-  `compra_codigo` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `compra_tipoComprobante` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `compra_serie` varchar(7) COLLATE utf8_spanish2_ci NOT NULL,
-  `compra_numComprobante` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `compra_fecha` varchar(40) COLLATE utf8_spanish2_ci NOT NULL,
-  `compra_impuesto` int(11) NOT NULL,
-  `compra_total` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `compra_id_proveedor` int(11) NOT NULL,
-  `compra_id_usuario` int(11) NOT NULL,
-  `compra_estado` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+CREATE TABLE comprobante (
+    comprobante_id serial PRIMARY KEY,
+    comprobante_nombre varchar(70) NOT NULL,
+    comprobante_letraSerie varchar(20) NOT NULL,
+    comprobante_serie varchar(30) NOT NULL,
+    comprobante_numero varchar(50) NOT NULL,
+    comprobante_estado boolean NOT NULL
+);
 
--- --------------------------------------------------------
+-- Insert data into comprobante
 
---
--- Estructura de tabla para la tabla `comprobante`
---
+INSERT INTO comprobante (comprobante_id, comprobante_nombre, comprobante_letraSerie, comprobante_serie, comprobante_numero, comprobante_estado) VALUES 
+(1, 'Boleta', 'B', '001', '0000001', true),
+(2, 'Factura', 'F', '001', '0000001', true);
 
-CREATE TABLE `comprobante` (
-  `comprobante_id` int(10) NOT NULL,
-  `comprobante_nombre` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `comprobante_letraSerie` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-  `comprobante_serie` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `comprobante_numero` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `comprobante_estado` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+-- Reset the sequence after manual inserts
+SELECT setval('comprobante_comprobante_id_seq', (SELECT MAX(comprobante_id) FROM comprobante));
 
---
--- Volcado de datos para la tabla `comprobante`
---
+-- Table: detalle_compra
 
-INSERT INTO `comprobante` (`comprobante_id`, `comprobante_nombre`, `comprobante_letraSerie`, `comprobante_serie`, `comprobante_numero`, `comprobante_estado`) VALUES
-(1, 'Boleta', 'B', '001', '0000001', 1),
-(2, 'Factura', 'F', '001', '0000001', 1);
+CREATE TABLE detalle_compra (
+    detalleCompra_id serial PRIMARY KEY,
+    detalleCompra_cantidad integer NOT NULL DEFAULT 1,
+    detalleCompra_precioC numeric(11,2) NOT NULL DEFAULT 0.00,
+    detalleCompra_precioV numeric(11,2) NOT NULL DEFAULT 0.00,
+    detalleCompra_id_compra integer NOT NULL,
+    detalleCompra_id_producto integer NOT NULL
+);
 
--- --------------------------------------------------------
+-- Table: detalle_venta
 
---
--- Estructura de tabla para la tabla `detalle_compra`
---
+CREATE TABLE detalle_venta (
+    detalleVenta_id serial PRIMARY KEY,
+    detalleVenta_cantidad integer NOT NULL DEFAULT 1,
+    detalleVenta_precioV numeric(10,2) NOT NULL DEFAULT 0.00,
+    detalleVenta_descuento numeric(10,2) NOT NULL DEFAULT 0.00,
+    detalleVenta_id_venta integer NOT NULL,
+    detalleVenta_id_producto integer NOT NULL
+);
 
-CREATE TABLE `detalle_compra` (
-  `detalleCompra_id` int(11) NOT NULL,
-  `detalleCompra_cantidad` int(11) NOT NULL DEFAULT 1,
-  `detalleCompra_precioC` decimal(11,2) NOT NULL DEFAULT 0.00,
-  `detalleCompra_precioV` decimal(11,2) NOT NULL DEFAULT 0.00,
-  `detalleCompra_id_compra` int(11) NOT NULL,
-  `detalleCompra_id_producto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+-- Table: empresa
 
--- --------------------------------------------------------
+CREATE TABLE empresa (
+    empresa_id serial PRIMARY KEY,
+    empresa_nombre varchar(100) NOT NULL,
+    empresa_ruc varchar(20) NOT NULL,
+    empresa_celular varchar(12) NOT NULL,
+    empresa_direccion varchar(100) NOT NULL,
+    empresa_correo varchar(70) NOT NULL,
+    empresa_impuesto varchar(20) NOT NULL,
+    empresa_impuestoValor integer NOT NULL,
+    empresa_moneda varchar(30) NOT NULL,
+    empresa_simbolo varchar(30) NOT NULL,
+    empresa_logo varchar(255) NOT NULL
+);
 
---
--- Estructura de tabla para la tabla `detalle_venta`
---
+-- Insert data into empresa
 
-CREATE TABLE `detalle_venta` (
-  `detalleVenta_id` int(11) NOT NULL,
-  `detalleVenta_cantidad` int(11) NOT NULL DEFAULT 1,
-  `detalleVenta_precioV` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `detalleVenta_descuento` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `detalleVenta_id_venta` int(11) NOT NULL,
-  `detalleVenta_id_producto` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `empresa`
---
-
-CREATE TABLE `empresa` (
-  `empresa_id` int(10) NOT NULL,
-  `empresa_nombre` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
-  `empresa_ruc` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-  `empresa_celular` varchar(12) COLLATE utf8_spanish2_ci NOT NULL,
-  `empresa_direccion` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
-  `empresa_correo` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `empresa_impuesto` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-  `empresa_impuestoValor` int(11) NOT NULL,
-  `empresa_moneda` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `empresa_simbolo` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `empresa_logo` varchar(255) COLLATE utf8_spanish2_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `empresa`
---
-
-INSERT INTO `empresa` (`empresa_id`, `empresa_nombre`, `empresa_ruc`, `empresa_celular`, `empresa_direccion`, `empresa_correo`, `empresa_impuesto`, `empresa_impuestoValor`, `empresa_moneda`, `empresa_simbolo`, `empresa_logo`) VALUES
+INSERT INTO empresa (empresa_id, empresa_nombre, empresa_ruc, empresa_celular, empresa_direccion, empresa_correo, empresa_impuesto, empresa_impuestoValor, empresa_moneda, empresa_simbolo, empresa_logo) VALUES 
 (1, 'Sana-Plus', '206054132701', '963852741', 'sin direccion', 'corre@example.com', 'IGV', 18, 'PEN', 'S/.', '../Assets/images/iconos/SVerde.png');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `laboratorio`
---
-
-CREATE TABLE `laboratorio` (
-  `lab_id` int(10) NOT NULL,
-  `lab_codigo` varchar(40) COLLATE utf8_spanish2_ci NOT NULL,
-  `lab_nombre` varchar(50) COLLATE utf8_spanish2_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `lote`
---
-
-CREATE TABLE `lote` (
-  `lote_id` int(10) NOT NULL,
-  `lote_codigo` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `lote_cantUnitario` int(11) NOT NULL DEFAULT 1,
-  `lote_fechaVencimiento` date NOT NULL,
-  `lote_id_producto` int(11) NOT NULL,
-  `lote_id_proveedor` int(11) NOT NULL,
-  `lote_id_compra` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `pago`
---
-
-CREATE TABLE `pago` (
-  `pago_id` int(11) NOT NULL,
-  `pago_nombre` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `pago_descripcion` varchar(255) COLLATE utf8_spanish2_ci NOT NULL,
-  `pago_estado` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `presentacion`
---
-
-CREATE TABLE `presentacion` (
-  `present_id` int(10) NOT NULL,
-  `present_codigo` varchar(40) COLLATE utf8_spanish2_ci NOT NULL,
-  `present_nombre` varchar(50) COLLATE utf8_spanish2_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `producto`
---
-
-CREATE TABLE `producto` (
-  `prod_id` int(10) NOT NULL,
-  `prod_codigo` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
-  `prod_codigoin` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `prod_nombre` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `prod_concentracion` varchar(250) COLLATE utf8_spanish2_ci NOT NULL,
-  `prod_adicional` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
-  `prod_imagen` varchar(250) COLLATE utf8_spanish2_ci NOT NULL,
-  `prod_precioC` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `prod_precioV` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `prod_id_lab` int(11) NOT NULL,
-  `prod_id_tipo` int(11) NOT NULL,
-  `prod_id_present` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `proveedor`
---
-
-CREATE TABLE `proveedor` (
-  `proved_id` int(10) NOT NULL,
-  `proved_codigo` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `proved_nombre` varchar(200) COLLATE utf8_spanish2_ci NOT NULL,
-  `proved_tipoDocumento` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `proved_numDocumento` varchar(20) COLLATE utf8_spanish2_ci NOT NULL,
-  `proved_celular` varchar(12) COLLATE utf8_spanish2_ci NOT NULL,
-  `proved_correo` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `proved_direccion` varchar(250) COLLATE utf8_spanish2_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tipo_producto`
---
-
-CREATE TABLE `tipo_producto` (
-  `tipo_id` int(10) NOT NULL,
-  `tipo_codigo` varchar(40) COLLATE utf8_spanish2_ci NOT NULL,
-  `tipo_nombre` varchar(50) COLLATE utf8_spanish2_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuario`
---
-
-CREATE TABLE `usuario` (
-  `usuario_id` int(10) NOT NULL,
-  `usuario_codigo` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_nombre` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_apellido` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_fechanacimiento` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_profesion` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_dni` varchar(15) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_celular` varchar(12) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_genero` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_cargo` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_descripcion` varchar(255) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_login` varchar(50) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_contrasena` varchar(100) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_perfil` varchar(250) COLLATE utf8_spanish2_ci NOT NULL,
-  `usuario_estado` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`usuario_id`, `usuario_codigo`, `usuario_nombre`, `usuario_apellido`, `usuario_fechanacimiento`, `usuario_profesion`, `usuario_dni`, `usuario_celular`, `usuario_genero`, `usuario_cargo`, `usuario_descripcion`, `usuario_login`, `usuario_contrasena`, `usuario_perfil`, `usuario_estado`) VALUES
-(1, 'USU-8458881', 'Administrador', 'Administrador', '2000-11-09', 'Administrador', '4567891', '963852741', 'Masculino', 'Administrador', 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout', 'admin', 'STEzZWowVG9UaFZFQU5mMXhVcGx5QT09', '../Assets/images/avatar/masculino.png', 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `venta`
---
-
-CREATE TABLE `venta` (
-  `venta_id` int(11) NOT NULL,
-  `venta_codigo` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `venta_id_comprobante` int(11) NOT NULL,
-  `venta_serie` varchar(70) COLLATE utf8_spanish2_ci NOT NULL,
-  `venta_numComprobante` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
-  `venta_fecha` timestamp NOT NULL DEFAULT current_timestamp(),
-  `venta_impuesto` int(11) NOT NULL,
-  `venta_total` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `venta_id_usuario` int(11) NOT NULL,
-  `venta_id_cliente` int(11) NOT NULL,
-  `venta_estado` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `bitacora`
---
-ALTER TABLE `bitacora`
-  ADD PRIMARY KEY (`bitacora_id`),
-  ADD KEY `bitacora_id_usuario` (`bitacora_id_usuario`);
-
---
--- Indices de la tabla `cliente`
---
-ALTER TABLE `cliente`
-  ADD PRIMARY KEY (`cliente_id`);
-
---
--- Indices de la tabla `compra`
---
-ALTER TABLE `compra`
-  ADD PRIMARY KEY (`compra_id`),
-  ADD KEY `compra_id_proveedor` (`compra_id_proveedor`),
-  ADD KEY `compra_id_usuario` (`compra_id_usuario`);
-
---
--- Indices de la tabla `comprobante`
---
-ALTER TABLE `comprobante`
-  ADD PRIMARY KEY (`comprobante_id`);
-
---
--- Indices de la tabla `detalle_compra`
---
-ALTER TABLE `detalle_compra`
-  ADD PRIMARY KEY (`detalleCompra_id`),
-  ADD KEY `detalleCompra_id_compra` (`detalleCompra_id_compra`),
-  ADD KEY `detalleCompra_id_producto` (`detalleCompra_id_producto`);
-
---
--- Indices de la tabla `detalle_venta`
---
-ALTER TABLE `detalle_venta`
-  ADD PRIMARY KEY (`detalleVenta_id`),
-  ADD KEY `detalleVenta_id_venta` (`detalleVenta_id_venta`),
-  ADD KEY `detalleVenta_id_producto` (`detalleVenta_id_producto`);
-
---
--- Indices de la tabla `empresa`
---
-ALTER TABLE `empresa`
-  ADD PRIMARY KEY (`empresa_id`);
-
---
--- Indices de la tabla `laboratorio`
---
-ALTER TABLE `laboratorio`
-  ADD PRIMARY KEY (`lab_id`);
-
---
--- Indices de la tabla `lote`
---
-ALTER TABLE `lote`
-  ADD PRIMARY KEY (`lote_id`),
-  ADD KEY `lote_id_producto` (`lote_id_producto`),
-  ADD KEY `lote_id_proveedor` (`lote_id_proveedor`);
-
---
--- Indices de la tabla `pago`
---
-ALTER TABLE `pago`
-  ADD PRIMARY KEY (`pago_id`);
-
---
--- Indices de la tabla `presentacion`
---
-ALTER TABLE `presentacion`
-  ADD PRIMARY KEY (`present_id`);
-
---
--- Indices de la tabla `producto`
---
-ALTER TABLE `producto`
-  ADD PRIMARY KEY (`prod_id`),
-  ADD KEY `prod_id_lab` (`prod_id_lab`),
-  ADD KEY `prod_id_tipo` (`prod_id_tipo`),
-  ADD KEY `prod_id_present` (`prod_id_present`);
-
---
--- Indices de la tabla `proveedor`
---
-ALTER TABLE `proveedor`
-  ADD PRIMARY KEY (`proved_id`);
-
---
--- Indices de la tabla `tipo_producto`
---
-ALTER TABLE `tipo_producto`
-  ADD PRIMARY KEY (`tipo_id`);
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`usuario_id`);
-
---
--- Indices de la tabla `venta`
---
-ALTER TABLE `venta`
-  ADD PRIMARY KEY (`venta_id`),
-  ADD KEY `venta_id_usuario` (`venta_id_usuario`),
-  ADD KEY `venta_id_cliente` (`venta_id_cliente`),
-  ADD KEY `venta_id_comprobante` (`venta_id_comprobante`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `bitacora`
---
-ALTER TABLE `bitacora`
-  MODIFY `bitacora_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `cliente`
---
-ALTER TABLE `cliente`
-  MODIFY `cliente_id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `compra`
---
-ALTER TABLE `compra`
-  MODIFY `compra_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `comprobante`
---
-ALTER TABLE `comprobante`
-  MODIFY `comprobante_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `detalle_compra`
---
-ALTER TABLE `detalle_compra`
-  MODIFY `detalleCompra_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `detalle_venta`
---
-ALTER TABLE `detalle_venta`
-  MODIFY `detalleVenta_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `empresa`
---
-ALTER TABLE `empresa`
-  MODIFY `empresa_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `laboratorio`
---
-ALTER TABLE `laboratorio`
-  MODIFY `lab_id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `lote`
---
-ALTER TABLE `lote`
-  MODIFY `lote_id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `pago`
---
-ALTER TABLE `pago`
-  MODIFY `pago_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `presentacion`
---
-ALTER TABLE `presentacion`
-  MODIFY `present_id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `producto`
---
-ALTER TABLE `producto`
-  MODIFY `prod_id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `proveedor`
---
-ALTER TABLE `proveedor`
-  MODIFY `proved_id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `tipo_producto`
---
-ALTER TABLE `tipo_producto`
-  MODIFY `tipo_id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `usuario_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `venta`
---
-ALTER TABLE `venta`
-  MODIFY `venta_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `bitacora`
---
-ALTER TABLE `bitacora`
-  ADD CONSTRAINT `bitacora_ibfk_1` FOREIGN KEY (`bitacora_id_usuario`) REFERENCES `usuario` (`usuario_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `compra`
---
-ALTER TABLE `compra`
-  ADD CONSTRAINT `compra_ibfk_1` FOREIGN KEY (`compra_id_proveedor`) REFERENCES `proveedor` (`proved_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `compra_ibfk_2` FOREIGN KEY (`compra_id_usuario`) REFERENCES `usuario` (`usuario_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `detalle_compra`
---
-ALTER TABLE `detalle_compra`
-  ADD CONSTRAINT `detalle_compra_ibfk_1` FOREIGN KEY (`detalleCompra_id_compra`) REFERENCES `compra` (`compra_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `detalle_compra_ibfk_2` FOREIGN KEY (`detalleCompra_id_producto`) REFERENCES `producto` (`prod_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `detalle_venta`
---
-ALTER TABLE `detalle_venta`
-  ADD CONSTRAINT `detalle_venta_ibfk_1` FOREIGN KEY (`detalleVenta_id_venta`) REFERENCES `venta` (`venta_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `detalle_venta_ibfk_2` FOREIGN KEY (`detalleVenta_id_producto`) REFERENCES `producto` (`prod_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `lote`
---
-ALTER TABLE `lote`
-  ADD CONSTRAINT `lote_ibfk_1` FOREIGN KEY (`lote_id_proveedor`) REFERENCES `proveedor` (`proved_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `lote_ibfk_2` FOREIGN KEY (`lote_id_producto`) REFERENCES `producto` (`prod_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `producto`
---
-ALTER TABLE `producto`
-  ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`prod_id_lab`) REFERENCES `laboratorio` (`lab_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `producto_ibfk_2` FOREIGN KEY (`prod_id_tipo`) REFERENCES `tipo_producto` (`tipo_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `producto_ibfk_3` FOREIGN KEY (`prod_id_present`) REFERENCES `presentacion` (`present_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `venta`
---
-ALTER TABLE `venta`
-  ADD CONSTRAINT `venta_ibfk_1` FOREIGN KEY (`venta_id_usuario`) REFERENCES `usuario` (`usuario_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `venta_ibfk_2` FOREIGN KEY (`venta_id_cliente`) REFERENCES `cliente` (`cliente_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `venta_ibfk_4` FOREIGN KEY (`venta_id_comprobante`) REFERENCES `comprobante` (`comprobante_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Reset the sequence after manual inserts
+SELECT setval('empresa_empresa_id_seq', (SELECT MAX(empresa_id) FROM empresa));
+
+-- Table: laboratorio
+
+CREATE TABLE laboratorio (
+    lab_id serial PRIMARY KEY,
+    lab_codigo varchar(40) NOT NULL,
+    lab_nombre varchar(50) NOT NULL
+);
+
+-- Table: lote
+
+CREATE TABLE lote (
+    lote_id serial PRIMARY KEY,
+    lote_codigo varchar(70) NOT NULL,
+    lote_cantUnitario integer NOT NULL DEFAULT 1,
+    lote_fechaVencimiento date NOT NULL,
+    lote_id_producto integer NOT NULL,
+    lote_id_proveedor integer NOT NULL,
+    lote_id_compra integer NOT NULL
+);
+
+-- Table: pago
+
+CREATE TABLE pago (
+    pago_id serial PRIMARY KEY,
+    pago_nombre varchar(70) NOT NULL,
+    pago_descripcion varchar(255) NOT NULL,
+    pago_estado boolean NOT NULL
+);
+
+-- Table: presentacion
+
+CREATE TABLE presentacion (
+    present_id serial PRIMARY KEY,
+    present_codigo varchar(40) NOT NULL,
+    present_nombre varchar(50) NOT NULL
+);
+
+-- Table: producto
+
+CREATE TABLE producto (
+    prod_id serial PRIMARY KEY,
+    prod_codigo varchar(100) NOT NULL,
+    prod_codigoin varchar(70) NOT NULL,
+    prod_nombre varchar(50) NOT NULL,
+    prod_concentracion varchar(250) NOT NULL,
+    prod_adicional varchar(100) NOT NULL,
+    prod_imagen varchar(250) NOT NULL,
+    prod_precioC numeric(10,2) NOT NULL DEFAULT 0.00,
+    prod_precioV numeric(10,2) NOT NULL DEFAULT 0.00,
+    prod_id_lab integer NOT NULL,
+    prod_id_tipo integer NOT NULL,
+    prod_id_present integer NOT NULL
+);
+
+-- Table: proveedor
+
+CREATE TABLE proveedor (
+    proved_id serial PRIMARY KEY,
+    proved_codigo varchar(70) NOT NULL,
+    proved_nombre varchar(200) NOT NULL,
+    proved_tipoDocumento varchar(50) NOT NULL,
+    proved_numDocumento varchar(20) NOT NULL,
+    proved_celular varchar(12) NOT NULL,
+    proved_correo varchar(50) NOT NULL,
+    proved_direccion varchar(250) NOT NULL
+);
+
+-- Table: tipo_producto
+
+CREATE TABLE tipo_producto (
+    tipo_id serial PRIMARY KEY,
+    tipo_codigo varchar(40) NOT NULL,
+    tipo_nombre varchar(50) NOT NULL
+);
+
+-- Table: usuario
+
+CREATE TABLE usuario (
+    usuario_id serial PRIMARY KEY,
+    usuario_codigo varchar(70) NOT NULL,
+    usuario_nombre varchar(50) NOT NULL,
+    usuario_apellido varchar(100) NOT NULL,
+    usuario_fechanacimiento varchar(100) NOT NULL,
+    usuario_profesion varchar(50) NOT NULL,
+    usuario_dni varchar(15) NOT NULL,
+    usuario_celular varchar(12) NOT NULL,
+    usuario_genero varchar(50) NOT NULL,
+    usuario_cargo varchar(30) NOT NULL,
+    usuario_descripcion varchar(255) NOT NULL,
+    usuario_login varchar(50) NOT NULL,
+    usuario_contrasena varchar(100) NOT NULL,
+    usuario_perfil varchar(250) NOT NULL,
+    usuario_estado boolean NOT NULL DEFAULT true
+);
+
+-- Insert data into usuario
+
+INSERT INTO usuario (usuario_id, usuario_codigo, usuario_nombre, usuario_apellido, usuario_fechanacimiento, usuario_profesion, usuario_dni, usuario_celular, usuario_genero, usuario_cargo, usuario_descripcion, usuario_login, usuario_contrasena, usuario_perfil, usuario_estado) VALUES 
+(1, 'USU-8458881', 'Administrador', 'Administrador', '2000-11-09', 'Administrador', '4567891', '963852741', 'Masculino', 'Administrador', 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout', 'admin', 'STEzZWowVG9UaFZFQU5mMXhVcGx5QT09', '../Assets/images/avatar/masculino.png', true);
+
+-- Reset the sequence after manual inserts
+SELECT setval('usuario_usuario_id_seq', (SELECT MAX(usuario_id) FROM usuario));
+
+-- Table: venta
+
+CREATE TABLE venta (
+    venta_id serial PRIMARY KEY,
+    venta_codigo varchar(70) NOT NULL,
+    venta_id_comprobante integer NOT NULL,
+    venta_serie varchar(70) NOT NULL,
+    venta_numComprobante varchar(30) NOT NULL,
+    venta_fecha timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    venta_impuesto integer NOT NULL,
+    venta_total numeric(10,2) NOT NULL DEFAULT 0.00,
+    venta_id_usuario integer NOT NULL,
+    venta_id_cliente integer NOT NULL,
+    venta_estado boolean NOT NULL DEFAULT true
+);
+
+-- Create indexes
+
+CREATE INDEX idx_bitacora_usuario ON bitacora (bitacora_id_usuario);
+CREATE INDEX idx_compra_proveedor ON compra (compra_id_proveedor);
+CREATE INDEX idx_compra_usuario ON compra (compra_id_usuario);
+CREATE INDEX idx_detalle_compra_compra ON detalle_compra (detalleCompra_id_compra);
+CREATE INDEX idx_detalle_compra_producto ON detalle_compra (detalleCompra_id_producto);
+CREATE INDEX idx_detalle_venta_venta ON detalle_venta (detalleVenta_id_venta);
+CREATE INDEX idx_detalle_venta_producto ON detalle_venta (detalleVenta_id_producto);
+CREATE INDEX idx_lote_producto ON lote (lote_id_producto);
+CREATE INDEX idx_lote_proveedor ON lote (lote_id_proveedor);
+CREATE INDEX idx_producto_lab ON producto (prod_id_lab);
+CREATE INDEX idx_producto_tipo ON producto (prod_id_tipo);
+CREATE INDEX idx_producto_present ON producto (prod_id_present);
+CREATE INDEX idx_venta_usuario ON venta (venta_id_usuario);
+CREATE INDEX idx_venta_cliente ON venta (venta_id_cliente);
+CREATE INDEX idx_venta_comprobante ON venta (venta_id_comprobante);
+
+-- Create foreign key constraints
+
+ALTER TABLE bitacora
+    ADD CONSTRAINT fk_bitacora_usuario FOREIGN KEY (bitacora_id_usuario) REFERENCES usuario (usuario_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE compra
+    ADD CONSTRAINT fk_compra_proveedor FOREIGN KEY (compra_id_proveedor) REFERENCES proveedor (proved_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_compra_usuario FOREIGN KEY (compra_id_usuario) REFERENCES usuario (usuario_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE detalle_compra
+    ADD CONSTRAINT fk_detalle_compra_compra FOREIGN KEY (detalleCompra_id_compra) REFERENCES compra (compra_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_detalle_compra_producto FOREIGN KEY (detalleCompra_id_producto) REFERENCES producto (prod_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE detalle_venta
+    ADD CONSTRAINT fk_detalle_venta_venta FOREIGN KEY (detalleVenta_id_venta) REFERENCES venta (venta_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_detalle_venta_producto FOREIGN KEY (detalleVenta_id_producto) REFERENCES producto (prod_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE lote
+    ADD CONSTRAINT fk_lote_proveedor FOREIGN KEY (lote_id_proveedor) REFERENCES proveedor (proved_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_lote_producto FOREIGN KEY (lote_id_producto) REFERENCES producto (prod_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE producto
+    ADD CONSTRAINT fk_producto_lab FOREIGN KEY (prod_id_lab) REFERENCES laboratorio (lab_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_producto_tipo FOREIGN KEY (prod_id_tipo) REFERENCES tipo_producto (tipo_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_producto_present FOREIGN KEY (prod_id_present) REFERENCES presentacion (present_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE venta
+    ADD CONSTRAINT fk_venta_usuario FOREIGN KEY (venta_id_usuario) REFERENCES usuario (usuario_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_venta_cliente FOREIGN KEY (venta_id_cliente) REFERENCES cliente (cliente_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT fk_venta_comprobante FOREIGN KEY (venta_id_comprobante) REFERENCES comprobante (comprobante_id) ON DELETE CASCADE ON UPDATE CASCADE;

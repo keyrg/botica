@@ -5,6 +5,6 @@
 	require_once "./Controllers/viewControllers.php";
 	$view = new viewControllers();
 	$view->get_controller_view();
-
+  
 
 	

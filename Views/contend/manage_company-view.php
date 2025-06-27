@@ -40,7 +40,7 @@
                                 <th>Celular</th>
                                 <th>Dirección</th>
                                 <th>Impuesto</th>
-                                <th>Modena</th>
+                                <th>Moneda</th>
                             </tr>
                             </thead>
                             <tbody>

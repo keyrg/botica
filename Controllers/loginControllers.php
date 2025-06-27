@@ -12,7 +12,11 @@
             $username=mainModel::clean_chain($_POST['usuario']);
             $password=mainModel::clean_chain($_POST['clave']);
 
-            $password=mainModel::encryption($password);
+         $password = mainModel::encryption($password);
+
+         // Agregar esto justo después de obtener $password:
+error_log("[LOGIN DEBUG] Password encriptado: ".$password);
+error_log("[LOGIN DEBUG] Consulta SQL ejecutada: SELECT usuario_contrasena FROM usuario WHERE usuario_contrasena='".$password."'");
 
             $validation=mainModel::run_simple_query("SELECT usuario_login FROM usuario WHERE usuario_login='$username'");
             if($validation->rowCount()>=1){

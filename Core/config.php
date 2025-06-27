@@ -1,21 +1,16 @@
 <?php 
-	
-	//Datos de conexion a base de datos
-	const DB_HOST = "localhost";
-    const DB_NAME = "botica";
-    const DB_USER = "root";
-	const DB_PASSWORD = "";
-	const SGBD="mysql:host=".DB_HOST.";dbname=".DB_NAME;
 
-	// Datos de conexión a base de datos en InfinityFree
-    // const DB_HOST = "sql206.infinityfree.com";
-    // const DB_NAME = "if0_39291681_botica";
-    // const DB_USER = "if0_39291681";
-    // const DB_PASSWORD = "GXzrIt5MtEG9";
-    // const SGBD = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME;
+// Datos de conexión para PostgreSQL en Render
+define('DB_HOST', 'dpg-d1f2bmqli9vc739ggq80-a.oregon-postgres.render.com');
+define('DB_NAME', 'botica');
+define('DB_USER', 'botica_user');
+define('DB_PASSWORD', '1T6NeWwgNoQDkKMxul7hLQ3eIHbquHoZ');
+define('DB_PORT', '5432');
+define('SGBD', 'pgsql:host='.DB_HOST.';port='.DB_PORT.';dbname='.DB_NAME.';sslmode=require');
 
-	//Datos para encryptacion
-	const METHOD="AES-256-CBC";
-    const SECRET_KEY='$#*ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890#*';
-	const SECRET_IV='20001109108103975194753';
-	 
+// Datos para encriptación
+define('METHOD', 'AES-256-CBC');
+define('SECRET_KEY', '$#*ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijmnopqrstuvwxyz1234567890#*');
+define('SECRET_IV', '20001109108103975194753');
+
+

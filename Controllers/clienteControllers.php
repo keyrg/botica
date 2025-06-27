@@ -188,5 +188,6 @@
             $query=clienteModels::show_client_model($cliente_id);
             $rspta= $query->fetch();
             echo json_encode($rspta);
-        }     
+        }   
+          
     }

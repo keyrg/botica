@@ -270,7 +270,7 @@
             $datas= $query->fetchAll();
             echo '<option value="0">Seleccionar</option>';
             foreach ($datas as $rows ) {
-                echo '<option value="'.mainModel::encryption($rows['cliente_id']).'">'.$rows['cliente_nombre'].'</option>';
+                echo '<option value="'.mainModel::encryption($rows['cliente_id']).'">'.$rows['cliente_nombre'].'  -    DNI:    '. $rows['cliente_dni'].'</option>';
             }
         }  
         public function select_comprobante_controller(){

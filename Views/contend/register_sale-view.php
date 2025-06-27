@@ -28,11 +28,12 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <form action="<?= base_url(); ?>/Ajax/ventasAjax.php?op=add" name="form" id="form" method="post" autocomplete="off">
-                                    <div class="row">
+                                    <div class="row">  
                                         <div class="col-xs-12 col-sm-8">
                                             <div class="form-group">
                                                 <label for="" class="label-control">Cliente<small> (*)</small></label>
                                                 <div class="input-group">
+                                                    <!-- AQuiiii -->
                                                     <select name="cliente" class="form-control select2" style="width: 100%;" id="cliente" readonly></select>
                                                     <!--<div class="input-group-append">
                                                         <button class="btn btn-info" type="button" data-toggle="modal" data-target="#Modalcliente">
