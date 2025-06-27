@@ -185,13 +185,30 @@
             } 
             return mainModel::sweet_alert($alert);       
         } 
-        public function show_controller(){
-            $compra_id=mainModel::decryption($_POST['compra_id']);
-            $compra_id=mainModel::clean_chain($compra_id);
-            $query=comprasModels::show_model($compra_id);
-            $rspta= $query->fetch();
-            echo json_encode($rspta);  
-        }  
+public function show_controller(){
+    $compra_id = mainModel::decryption($_POST['compra_id']);
+    $compra_id = mainModel::clean_chain($compra_id);
+    $query = comprasModels::show_model($compra_id);
+    $rspta = $query->fetch(PDO::FETCH_ASSOC);
+
+    if ($rspta) {
+        $data = [
+            "compra_id"             => $rspta["compra_id"] ?? "",
+            "compra_fecha"          => $rspta["compra_fecha"] ?? "",
+            "compra_total"          => $rspta["compra_total"] ?? "",
+            "compra_impuesto"       => $rspta["compra_impuesto"] ?? "",
+            "compra_tipoComprobante"=> $rspta["compra_tipoComprobante"] ?? "",
+            "compra_serie"          => $rspta["compra_serie"] ?? "",
+            "compra_numComprobante" => $rspta["compra_numComprobante"] ?? "",
+            "proved_nombre"         => $rspta["proved_nombre"] ?? "",
+            "compra_id_proveedor"   => $rspta["compra_id_proveedor"] ?? ""
+        ];
+        echo json_encode($data);
+    } else {
+        echo json_encode(["error" => "No se encontró la compra."]);
+    }
+}
+
         public function show_detail_controller(){
             session_start(['name'=>'STR']);
             $compra_id=mainModel::decryption($_GET['id']);

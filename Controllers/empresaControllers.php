@@ -29,7 +29,7 @@
                     "icon"=>"error"
                 ];
                 return mainModel::sweet_alert($alert);
-                exit();
+            
             }else{
                 $dataEmpresa=[
                     "Nombre"=>$nombre,
@@ -131,7 +131,8 @@
                     "3"=>$reg['empresa_ruc'],
                     "4"=>$reg['empresa_celular'],
                     "5"=>$reg['empresa_direccion'],
-                    "6"=>$reg['empresa_impuesto']." ".$reg['empresa_impuestoValor']."%",
+                    "6"=> (isset($reg['empresa_impuesto']) ? $reg['empresa_impuesto'] : '') . " " . (isset($reg['empresa_impuestoValor']) ? $reg['empresa_impuestoValor'] : '0') . "%",
+
                     "7"=>$reg['empresa_moneda']."-".$reg['empresa_simbolo']
                 );
             }

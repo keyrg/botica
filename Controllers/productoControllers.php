@@ -149,7 +149,7 @@
                         "icon"=>"error"
                     ];
                     return mainModel::sweet_alert($alert);
-                    exit();
+                    
                 }
             }
             $dataProduct=[

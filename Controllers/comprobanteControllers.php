@@ -66,7 +66,7 @@
                     "icon"=>"error"
                 ];
                 return mainModel::sweet_alert($alert);
-                exit();
+                
             }else{
                 $dataVoucher=[
                     "Nombre"=>$nombre,
@@ -119,7 +119,8 @@
                         <i class="fa fa-trash fa-xs"></i>
                     </button></div>',
                     "1"=>$reg['comprobante_nombre'],
-                    "2"=>$reg['comprobante_letraSerie'].$reg['comprobante_serie'].'-'.$reg['comprobante_numero'],
+                    "2"=>($reg['comprobante_letraSerie'] ?? '') . ($reg['comprobante_serie'] ?? '') . '-' . ($reg['comprobante_numero'] ?? ''),
+
                     "3"=>($reg['comprobante_estado'])?'<span class="badge badge-success">Activado</span>':'<span class="badge badge-danger">Desactivado</span>' 
                 );
             }

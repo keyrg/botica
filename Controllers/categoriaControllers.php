@@ -59,7 +59,7 @@
                     "icon"=>"error"
                 ];
                 return mainModel::sweet_alert($alert);
-                exit();
+                
             }else{
                 $dataCate=[
                     "Category"=>$categoria,

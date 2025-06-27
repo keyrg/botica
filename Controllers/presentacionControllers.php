@@ -59,7 +59,7 @@
                     "icon"=>"error"
                 ];
                 return mainModel::sweet_alert($alert);
-                exit();
+            
             }else{
                 $dataPresent=[
                     "Presentacion"=>$presentacion,
