@@ -1,9 +1,7 @@
 services:
   - type: web
     name: sana-plus
-    env: php
+    env: docker
     plan: free
     branch: main
-    buildCommand: ""
-    startCommand: ""
-    rootDir: .
+    dockerfilePath: Dockerfile
