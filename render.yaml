@@ -1,5 +1,9 @@
 services:
   - type: web
-    name: php-web-app
-    env: static
-    staticPublishPath: .
+    name: sana-plus
+    env: php
+    plan: free
+    branch: main
+    buildCommand: ""
+    startCommand: ""
+    rootDir: .
