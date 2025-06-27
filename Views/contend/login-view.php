@@ -16,8 +16,7 @@
   	<div class="card">
     	<div class="card-body login-card-body">
       		<p class="login-box-msg">Ingrese sus datos de ingreso</p>
-      		<!-- Cambia el formulario a: -->
-<form action="<?= BASE_URL ?>login" method="POST" autocomplete="off">
+      		<form action="" method="POST" autocomplete="off" >
 					<div class="input-group mb-3">
 						<input type="text" class="form-control" name="usuario" placeholder="Usuario">
 						<div class="input-group-append">

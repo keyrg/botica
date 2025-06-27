@@ -1,7 +1,7 @@
 <?php
 
 	//Ruta del proyecto
-	const BASE_URL = "http://localhost/sana-plus/";
+	const BASE_URL = "https://botica-532h.onrender.com";
 	const TITLE = "SISTEMA FARMACEUTICO";
 
 	// Ruta del dominio del proyecto
