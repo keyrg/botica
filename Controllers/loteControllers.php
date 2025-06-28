@@ -100,7 +100,8 @@ class loteControllers extends loteModels{
             }
 
             $data[] = array(
-                "0" => ($reg['lote_cantUnitario'] && $verificado) ?
+                "0" => (($reg['lote_cantUnitario'] ?? 0) && $verificado) ?
+
                 '<div class="btn-group">
                 <button type="button" data-toggle="modal" title="Actualizar" class="btn btn-primary btn-sm editar" id="'.mainModel::encryption($reg['lote_id']).'">
                 <i class="fa fa-edit fa-xs"></i>
@@ -116,8 +117,9 @@ class loteControllers extends loteModels{
                 "2" => $reg['prod_nombre'],
                 "3" => $reg['prod_concentracion'],
                 "4" => $reg['prod_adicional'],
-                "5" => "UND.".$reg['lote_cantUnitario'],
-                "6" => $reg['lote_fechaVencimiento'], 
+                "5" => "UND.".($reg['lote_cantUnitario'] ?? 0),
+"6" => $reg['lote_fechaVencimiento'] ?? 'No definido', 
+
                 "7" => $reg['lab_nombre'],
                 "8" => $reg['tipo_nombre'],
                 "9" => $reg['present_nombre'],
@@ -162,7 +164,8 @@ class loteControllers extends loteModels{
             $data[] = array(
                 "id"=>$reg['lote_codigo'],
                 "producto"=>$reg['prod_nombre'],
-                "stock"=>$reg['lote_cantUnitario'],
+                "stock"=>$reg['lote_cantUnitario'] ?? 0,
+
                 "laboratorio"=>$reg['lab_nombre'],
                 "presentacion"=>$reg['present_nombre'],
                 "proveedor"=>$reg['proved_nombre'],
