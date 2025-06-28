@@ -111,8 +111,9 @@
                     "1"=>$reg['compra_fecha'],
                     "2"=>$reg['proved_nombre'],
                     "3"=>$reg['usuario_nombre'],
-                    "4"=>$reg['compra_tipoComprobante'], 
-                    "5"=>$reg['compra_serie'].'-'.$reg['compra_numComprobante'],
+                    "4"=>isset($reg['compra_tipoComprobante']) ? $reg['compra_tipoComprobante'] : '',
+"5"=>(isset($reg['compra_serie']) ? $reg['compra_serie'] : '').'-'.(isset($reg['compra_numComprobante']) ? $reg['compra_numComprobante'] : ''),
+
                     "6"=>$_SESSION['simbolo_str'].formatMoney($reg['compra_total']),
                     "7"=>($reg['compra_estado'])?'<span class="badge badge-success">Aceptado</span>':'<span class="badge badge-danger">Anulado</span>'
                 );

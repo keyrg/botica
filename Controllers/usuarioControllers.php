@@ -99,7 +99,7 @@
                     "icon"=>"error"
                 ];
                 return mainModel::sweet_alert($alert);
-                exit();
+                
             }
             return mainModel::sweet_alert($alert);
         }
@@ -139,7 +139,7 @@
                         "icon"=>"error"
                     ];
                     return mainModel::sweet_alert($alert);
-                    exit();
+                    
                 }
             }
             $dataUser=[
@@ -202,7 +202,7 @@
                         "icon"=>"error"
                     ];
                     return mainModel::sweet_alert($alert);
-                    exit();
+                    
                 }
             }
             $dataUser=[
@@ -257,7 +257,7 @@
                     "icon"=>"error"
                 ];
                 return mainModel::sweet_alert($alert);
-                exit();
+                
             }
             $dataUser=[
                 "Clave"=>$passwordNew,

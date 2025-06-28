@@ -91,7 +91,7 @@
                         "icon"=>"error"
                     ];
                     return mainModel::sweet_alert($alert);
-                    exit();
+                    
                 }
             }
             $dataProvider=[
@@ -137,8 +137,9 @@
                     <i class="fa fa-trash fa-xs"></i>
                     </button></div>',
                     "1"=>$reg['proved_nombre'],
-                    "2"=>$reg['proved_tipoDocumento'],
-                    "3"=>$reg['proved_numDocumento'],
+                    "2"=>$reg['proved_tipoDocumento'] ?? '',
+"3"=>$reg['proved_numDocumento'] ?? '',
+
                     "4"=>$reg['proved_celular'],
                     "5"=>$reg['proved_correo'], 
                     "6"=>$reg['proved_direccion']
