@@ -8,89 +8,83 @@
     class ventasControllers extends ventasModels{
 
         public function add_controller(){
-            $cliente=mainModel::decryption($_POST['cliente']);
-            $cliente=mainModel::clean_chain($cliente);
-            $fecha=mainModel::clean_chain($_POST['fecha']);
-            $tipo_comprobante=mainModel::decryption($_POST['tipo_comprobante']);
-            $tipo_comprobante=mainModel::clean_chain($tipo_comprobante);
-            $serie_comprobante=mainModel::clean_chain($_POST['serie_comprobante']);
-            $num_comprobante=mainModel::clean_chain($_POST['num_comprobante']);
-            $impuesto=mainModel::clean_chain($_POST['impuesto']);
-            $total_venta=mainModel::clean_chain($_POST['total_venta']);
+    $cliente = mainModel::decryption($_POST['cliente']);
+    $cliente = mainModel::clean_chain($cliente);
+    $fecha = mainModel::clean_chain($_POST['fecha']);
+    $tipo_comprobante = mainModel::decryption($_POST['tipo_comprobante']);
+    $tipo_comprobante = mainModel::clean_chain($tipo_comprobante);
+    $serie_comprobante = mainModel::clean_chain($_POST['serie_comprobante']);
+    $num_comprobante = mainModel::clean_chain($_POST['num_comprobante']);
+    $impuesto = mainModel::clean_chain($_POST['impuesto']);
+    $total_venta = mainModel::clean_chain($_POST['total_venta']);
 
-            $query=mainModel::run_simple_query("SELECT venta_id  FROM venta");
-               
-            $number=($query->rowCount())+1;
-            $codigo=mainModel::random_code("VTN-",6,$number);
-            session_start(['name'=>'STR']);
+    $query = mainModel::run_simple_query("SELECT venta_id FROM venta");
+    $number = ($query->rowCount()) + 1;
+    $codigo = mainModel::random_code("VTN-", 6, $number);
+    session_start(['name' => 'STR']);
+    $usuario = $_SESSION['id_user_str'];
 
-            $usuario = $_SESSION['id_user_str'];
+    $dataVenta = [
+        "Codigo" => $codigo,
+        "TipoC" => $tipo_comprobante,
+        "SerieC" => $serie_comprobante,
+        "NumC" => $num_comprobante,
+        "Fecha" => $fecha,
+        "Impuesto" => $impuesto,
+        "Total" => $total_venta,
+        "Usuario" => $usuario,
+        "Cliente" => $cliente,
+        "Estado" => "1"
+    ];
 
-            $dataVenta=[
-                "Codigo"=>$codigo,
-                "TipoC"=>$tipo_comprobante,
-                "SerieC"=>$serie_comprobante,
-                "NumC"=>$num_comprobante,
-                "Fecha"=>$fecha,
-                "Impuesto"=>$impuesto,
-                "Total"=>$total_venta,
-                "Usuario"=>$usuario,
-                "Cliente"=>$cliente,
-                "Estado"=>"1"
-            ];
-            $saveVenta=ventasModels::add_model($dataVenta);
-            if ($saveVenta->rowCount()>=1){
+    $idvc = null;
+    $saveVenta = ventasModels::add_model($dataVenta);
 
-                    $obtainID=mainModel::run_simple_query("SELECT MAX(venta_id) as id  from venta");
-                    $vent=$obtainID->fetch();
-                    $idvc = $vent['id'];
-                    $p = $_POST['prod_id'];
-                    $c = $_POST['cantidad'];
-                    $pc = $_POST['precio_venta'];
-                    $des = $_POST['descuento'];
-                    $num_elementos=0;
-      
-                    while ($num_elementos < count($p)) {;
-                        for ($i=0; $i < $c[$num_elementos]; $i++) { 
-                            $lote=mainModel::run_simple_query("SELECT lote_cantUnitario, lote_id FROM lote WHERE lote_id_producto = $p[$num_elementos] AND lote_cantUnitario > 0 LIMIT 1");
-                            $loteCant = $lote->fetch();
-                            $loteCantO = $loteCant['lote_cantUnitario'] - 1;
-                            $loteId = $loteCant['lote_id'];
-                            $saveLote = ventasModels::update_lote($loteCantO, $loteId);
-                        }
+    if ($saveVenta->rowCount() >= 1) {
+        $obtainID = mainModel::run_simple_query("SELECT MAX(venta_id) as id FROM venta");
+        $vent = $obtainID->fetch();
+        $idvc = $vent['id'];
+        $p = $_POST['prod_id'];
+        $c = $_POST['cantidad'];
+        $pc = $_POST['precio_venta'];
+        $des = $_POST['descuento'];
+        $num_elementos = 0;
 
-                    //Registrar detalle
-                     $saveDetalle=ventasModels::add_detail_model($c[$num_elementos],$pc[$num_elementos],$des[$num_elementos]
-                     ,$vent['id'],$p[$num_elementos]);
-
-                    $num_elementos=$num_elementos+1;
-                    }   
-                    if($saveDetalle->rowCount()>=1){
-                        $alert=[
-                            "Alert"=>"sales",
-                            "title"=>"Operacion exitosa",
-                            "text"=>"Venta registrada exitosamente",
-                            "icon"=>"success"
-                        ];
-                    }else{
-                        $alert=[
-                            "Alert"=>"simple",
-                            "title"=>"Ocurrió un error inesperado",
-                            "text"=>"¡Error! No hemos podido registrar venta, en este momento",
-                            "icon"=>"error"
-                        ];
-                    }
-            }else {
-                    $alert=[
-                        "Alert"=>"simple",
-                        "title"=>"Ocurrió un error inesperado",
-                        "text"=>"¡Error! No hemos podido registrar venta, en este momento",
-                        "icon"=>"error"
-                    ];
+        while ($num_elementos < count($p)) {
+            for ($i = 0; $i < $c[$num_elementos]; $i++) {
+                $lote = mainModel::run_simple_query("SELECT lote_cantUnitario, lote_id FROM lote WHERE lote_id_producto = {$p[$num_elementos]} AND lote_cantUnitario > 0 LIMIT 1");
+                $loteCant = $lote->fetch();
+                $loteCantO = $loteCant['lote_cantUnitario'] - 1;
+                $loteId = $loteCant['lote_id'];
+                ventasModels::update_lote($loteCantO, $loteId);
             }
-            
-            return json_encode(["alert"=>mainModel::sweet_alert($alert), "id"=>mainModel::encryption($idvc), "comprobante"=>$tipo_comprobante]);
-        } 
+
+            ventasModels::add_detail_model($c[$num_elementos], $pc[$num_elementos], $des[$num_elementos], $idvc, $p[$num_elementos]);
+            $num_elementos++;
+        }
+
+        $alert = [
+            "Alert" => "sales",
+            "title" => "Operacion exitosa",
+            "text" => "Venta registrada exitosamente",
+            "icon" => "success"
+        ];
+    } else {
+        $alert = [
+            "Alert" => "simple",
+            "title" => "Ocurrió un error inesperado",
+            "text" => "¡Error! No hemos podido registrar venta, en este momento",
+            "icon" => "error"
+        ];
+    }
+
+    return json_encode([
+        "alert" => mainModel::sweet_alert($alert),
+        "id" => $idvc ? mainModel::encryption($idvc) : null,
+        "comprobante" => $tipo_comprobante
+    ]);
+}
+
         public function list_controller(){
             session_start(['name'=>'STR']);
             $query = ventasModels::list_model();
