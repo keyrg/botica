@@ -52,17 +52,11 @@
             return $sql;
         }
         protected function mostrar_serie_model($code){ 
-    // Validación del parámetro de entrada
-    if(empty($code) || !is_numeric($code)) {
-        throw new Exception("El código del comprobante debe ser un número válido");
-    }
-
-    $sql = mainModel::connect()->prepare("SELECT comprobante_letraSerie, comprobante_serie FROM comprobante WHERE comprobante_id = :Code");
-    $sql->bindParam(":Code", $code, PDO::PARAM_INT);
-    $sql->execute();
-    
-    return $sql;
-}
+            $sql=mainModel::connect()->prepare("SELECT comprobante_letraSerie,comprobante_serie FROM comprobante  WHERE comprobante_id=:Code");
+            $sql->bindParam("Code",$code);
+            $sql->execute();
+            return $sql;
+        }
         protected function mostrar_numero_model($code){ 
             $sql=mainModel::connect()->prepare("SELECT (COUNT(venta_id)+1)as numero FROM venta where venta_id_comprobante=:Code");
             $sql->bindParam("Code",$code);

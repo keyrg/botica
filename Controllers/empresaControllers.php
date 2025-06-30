@@ -151,41 +151,12 @@
             echo json_encode($rspta); 
         }     
         public function mostrar_serie_controller(){
-    // Limpiar cualquier salida previa
-    if (ob_get_length()) ob_clean();
-    
-    try {
-        if(!isset($_POST['tipo_comprobante'])) {
-            throw new Exception("Parámetro 'tipo_comprobante' faltante");
-        }
-
-        $tipo_comprobante = mainModel::decryption($_POST['tipo_comprobante']);
-        $tipo_comprobante = mainModel::clean_chain($tipo_comprobante);
-
-        if(empty($tipo_comprobante)) {
-            throw new Exception("Tipo de comprobante inválido");
-        }
-
-        $query = empresaModels::mostrar_serie_model($tipo_comprobante);
-        $rspta = $query->fetch();
-        
-        if(!$rspta) {
-            throw new Exception("No se encontraron datos para el comprobante");
-        }
-
-        header('Content-Type: application/json');
-        echo json_encode($rspta);
-        
-    } catch(Exception $e) {
-        header('Content-Type: application/json');
-        http_response_code(400);
-        echo json_encode([
-            'error' => true,
-            'message' => $e->getMessage()
-        ]);
-    }
-    exit();
-}
+            $tipo_comprobante=mainModel::decryption($_POST['tipo_comprobante']);
+            $tipo_comprobante=mainModel::clean_chain($tipo_comprobante);
+            $query=empresaModels::mostrar_serie_model($tipo_comprobante);
+            $rspta= $query->fetch();
+            echo json_encode($rspta); 
+        }  
         public function mostrar_numero_controller(){
             $tipo_comprobante=mainModel::decryption($_GET['tipo_comprobante']);
             $tipo_comprobante=mainModel::clean_chain($tipo_comprobante);
