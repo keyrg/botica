@@ -151,12 +151,50 @@
             echo json_encode($rspta); 
         }     
         public function mostrar_serie_controller(){
-            $tipo_comprobante=mainModel::decryption($_POST['tipo_comprobante']);
-            $tipo_comprobante=mainModel::clean_chain($tipo_comprobante);
-            $query=empresaModels::mostrar_serie_model($tipo_comprobante);
-            $rspta= $query->fetch();
-            echo json_encode($rspta); 
-        }  
+    try {
+        // Verificar si se recibió el tipo de comprobante
+        if(!isset($_POST['tipo_comprobante']) || empty($_POST['tipo_comprobante'])) {
+            throw new Exception("Tipo de comprobante no recibido");
+        }
+
+        $tipo_comprobante = mainModel::decryption($_POST['tipo_comprobante']);
+        $tipo_comprobante = mainModel::clean_chain($tipo_comprobante);
+        
+        // Validar que el tipo_comprobante no esté vacío después de la limpieza
+        if(empty($tipo_comprobante)) {
+            throw new Exception("Tipo de comprobante no válido");
+        }
+
+        $query = empresaModels::mostrar_serie_model($tipo_comprobante);
+        
+        if($query === false) {
+            throw new Exception("Error al obtener la serie del comprobante");
+        }
+
+        $rspta = $query->fetch();
+        
+        if($rspta === false) {
+            throw new Exception("No se encontraron datos para el comprobante");
+        }
+
+        // Limpiar buffer de salida y enviar JSON
+        if(ob_get_length()) ob_clean();
+        header('Content-Type: application/json');
+        echo json_encode($rspta);
+        exit();
+        
+    } catch(Exception $e) {
+        // Manejo de errores
+        if(ob_get_length()) ob_clean();
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode([
+            'error' => true,
+            'message' => $e->getMessage()
+        ]);
+        exit();
+    }
+}
         public function mostrar_numero_controller(){
             $tipo_comprobante=mainModel::decryption($_GET['tipo_comprobante']);
             $tipo_comprobante=mainModel::clean_chain($tipo_comprobante);
