@@ -35,12 +35,12 @@ function list_produc(){
 		"order":[[0,"desc"]],
         "language": {
             "sProcessing":     "Procesando...",
-            "sLengthMenu":     "Mostrar _MENU_ registros",
+            "sLengthMenu":     "Mostrar MENU registros",
             "sZeroRecords":    "No se encontraron resultados",
             "sEmptyTable":     "Ningún dato disponible en esta tabla",
-            "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfo":           "Mostrando registros del START al END de un total de TOTAL registros",
             "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+            "sInfoFiltered":   "(filtrado de un total de MAX registros)",
             "sInfoPostFix":    "",
             "sSearch":         "Buscar:",
             "sUrl":            "",
@@ -215,7 +215,7 @@ function addDetailcart(id,producto,concentracion,adicional,precio,cantidad,data)
 	if (id!="") {
 		var subtotal=cantidad*price;
 		var fila='<tr class="filas" id="fila'+cont+'">'+
-		`<td class="text-center"><div class="btn-group"><button type="button" name='${JSON.stringify(data)}' class="btn btn-danger btn-sm" href="#" onclick="deleteDetailCart(${cont}, this)"><i class="fa fa-trash fa-xs"></i></button></div></td>`+
+		<td class="text-center"><div class="btn-group"><button type="button" name='${JSON.stringify(data)}' class="btn btn-danger btn-sm" href="#" onclick="deleteDetailCart(${cont}, this)"><i class="fa fa-trash fa-xs"></i></button></div></td>+
         '<td><input type="hidden" name="prod_id[]" value="'+id+'">'+producto+' '+concentracion+' '+adicional+'</td>'+
 		'<td class="text-center"><input class="form-control text_fondo cantidad" type="number" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" min="1" max="'+stock+'" onchange="ver_stock(this.value,'+stock+')" name="cantidad[]" id="cantidad[]" value="'+numero_cantidad+'"></td>'+
         '<td class="text-center"><input class="form-control text_fondo" type="text" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" onchange="modifySubtotals()" name="precio_venta[]" id="precio_venta[]" step="0.01" value="'+price+'"></td>'+
