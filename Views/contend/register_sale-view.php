@@ -239,8 +239,6 @@
 
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
-<!-- Plugin que permite leer códigos de barras -->
-<script src="https://unpkg.com/jquery-scanner-detection/jquery.scannerdetection.min.js"></script>
 
 <!-- Script propio -->
 <script src="<?= media(); ?>/funciones/crearventa.js"></script>
