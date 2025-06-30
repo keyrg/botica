@@ -44,21 +44,10 @@
                     $obtainID=mainModel::run_simple_query("SELECT MAX(venta_id) as id  from venta");
                     $vent=$obtainID->fetch();
                     $idvc = $vent['id'];
-                    $p = isset($_POST['prod_id']) ? $_POST['prod_id'] : [];
-$c = isset($_POST['cantidad']) ? $_POST['cantidad'] : [];
-$pc = isset($_POST['precio_venta']) ? $_POST['precio_venta'] : [];
-$des = isset($_POST['descuento']) ? $_POST['descuento'] : [];
-
-if (empty($p) || empty($c) || empty($pc) || empty($des)) {
-    $alert = [
-        "Alert" => "simple",
-        "title" => "Datos incompletos",
-        "text" => "Debe agregar al menos un producto antes de registrar la venta.",
-        "icon" => "warning"
-    ];
-    return json_encode(["alert" => mainModel::sweet_alert($alert)]);
-}
-
+                    $p = $_POST['prod_id'];
+                    $c = $_POST['cantidad'];
+                    $pc = $_POST['precio_venta'];
+                    $des = $_POST['descuento'];
                     $num_elementos=0;
       
                     while ($num_elementos < count($p)) {;
