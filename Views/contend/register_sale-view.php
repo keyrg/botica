@@ -230,15 +230,17 @@
     <div id="msjCliente"></div>
   </div>
 </div>
-
-<!-- jQuery -->
+<!-- jQuery FIRST -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Select2 CSS (poner en tu <head> si no está) -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- THEN the barcode listener plugin -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-barcode-listener@1.0.0/dist/jquery.barcodeListener.min.js"></script>
 
+<!-- THEN other plugins -->
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 
-<!-- Script propio -->
+<!-- FINALLY your custom script -->
 <script src="<?= media(); ?>/funciones/crearventa.js"></script>
