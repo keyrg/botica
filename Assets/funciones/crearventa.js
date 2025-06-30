@@ -519,54 +519,55 @@ function buttonSwitch(){
 }
 /*=============================================================================
 =============================================================================*/
-$('body').barcodeListener().on('barcode.valid', function(e, code){
-	$.ajax({
-		url: base_url+"/Ajax/ventasAjax.php?op=barcode",
-		data:{barcode:code},
-		type:'post',
-		dataType:'json',
-		success: function(resp){
-			if(resp.length === 0){ 
-				Swal.fire({
-					title: 'Oops',
-					text: 'El producto no existe',
-					icon: 'info',
-					showConfirmButton: false,
-					timer: 1500
-				})
-		
-			}else{
-				if(resp[0].cantidad !== null || resp[0].cantidad !== 0){
-					for (let i = 0; i < $('.filas').length; i++){
-						const element = $('input[name="prod_id[]"]').get(i)
-						
-						if(element['value'] === resp[0].id)
-						{
-							Swal.fire({
-								title: 'Oops',
-							text: 'Este producto ya esta agregado',
-							icon: 'info',
-							showConfirmButton: false,
-							timer: 1500
-							})
-							return
-						}
-					}
-					addDetail(resp[0].id,resp[0].producto,resp[0].concentracion,resp[0].adicional,resp[0].precio,resp[0].cantidad)
-					return
-				}else{ 
-					Swal.fire({
-					title: 'Oops',
-					text: '¡No hay stock de este producto!',
-					icon: 'info',
-					showConfirmButton: false,
-					timer: 1500
-					})
-				}		
-			}
-		}
-	})
-})
+$('body').scannerDetection({
+  timeBeforeScanTest: 200, // tiempo para detectar si fue un escaneo
+  avgTimeByChar: 40,       // velocidad promedio entre caracteres
+  preventDefault: true,
+  endChar: [13],           // Enter
+  onComplete: function(code) {
+    $.ajax({
+      url: base_url + "/Ajax/ventasAjax.php?op=barcode",
+      data: { barcode: code },
+      type: 'post',
+      dataType: 'json',
+      success: function(resp) {
+        if (resp.length === 0) {
+          Swal.fire({
+            title: 'Oops',
+            text: 'El producto no existe',
+            icon: 'info',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        } else {
+          const producto = resp[0];
+          if (producto.cantidad > 0) {
+            const yaExiste = $('input[name="prod_id[]"]').toArray().some(input => input.value === producto.id);
+            if (yaExiste) {
+              Swal.fire({
+                title: 'Oops',
+                text: 'Este producto ya está agregado',
+                icon: 'info',
+                showConfirmButton: false,
+                timer: 1500
+              });
+              return;
+            }
+            addDetail(producto.id, producto.producto, producto.concentracion, producto.adicional, producto.precio, producto.cantidad);
+          } else {
+            Swal.fire({
+              title: 'Oops',
+              text: '¡No hay stock de este producto!',
+              icon: 'info',
+              showConfirmButton: false,
+              timer: 1500
+            });
+          }
+        }
+      }
+    });
+  }
+});
 /*=============================================================================
 =============================================================================*/
 function cart(){
